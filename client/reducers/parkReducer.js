@@ -12,7 +12,9 @@ const initialState = {
   fullName: '',
   description: '',
   weather: '',
-  images: ''
+  images: '',
+  isFav:false,
+  code:'',
 }
 
 const parkReducer = (state = initialState, action) => {
@@ -41,8 +43,8 @@ const parkReducer = (state = initialState, action) => {
 
       for (let element of markerData) {
         const markerState = {
-          name: element.name,
-          code: element.code,
+          name: element.fullName,
+          code: element.parkCode,
           position: {
             lat: element.latitude,
             long: element.longitude,
@@ -61,12 +63,13 @@ const parkReducer = (state = initialState, action) => {
     // get data from fetch request to manipulate our state
     // also toggle?
     case types.PARKINFO:
-      const parkData = action.payload
+      const parkData = action.payload; 
       const fullName = parkData.fullName;
       const description = parkData.description;
-      const weather = parkData.weather;
+      const weather = parkData.weatherInfo;
       const images = parkData.images;
       let showPark = true;
+      let code = parkData.parkCode;
 
       return {
         ...state,
@@ -74,7 +77,21 @@ const parkReducer = (state = initialState, action) => {
         description,
         weather,
         images,
-        showPark
+        showPark,
+        code,
+      }
+
+
+    case types.ADD_FAVORITE:
+      // const id;
+      // const parkCode; 
+      // const username; 
+
+      return {
+        ...state,
+        id,
+        parkCode,
+        username,
       }
 
     default:

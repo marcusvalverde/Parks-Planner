@@ -351,7 +351,7 @@ button {
   width: 80%;
   margin: auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -373,7 +373,11 @@ button {
   opacity:1.0;
 }
 .park{
-  display: grid;
+  display:flex;
+  flex-wrap: wrap;
+  background-color: lightblue;
+  margin-left: 2rem; 
+  /* display: grid;
   align-items: center;
   background-color:#F7F9FB; 
   color: #00887A;
@@ -383,19 +387,23 @@ button {
     "head head head head"
     "weather weather description description"
     "pic pic pic pic"
-    "pic pic pic pic";
+    "pic pic pic pic"; */
 }
 .head{
   grid-area: head; 
+  width: 300px; 
 }
 .description{
-  grid-area: description; 
+  grid-area: description;
+  width:300px; 
 }
 .weather{
   grid-area: weather; 
+  width:300px; 
 }
 .pic{
   grid-area: pic; 
+  width:300px;
 }
 .icon{
   margin-left:20px;

@@ -16,8 +16,9 @@ export const setMarker = (markerData) => ({
 
 export const fetchMarkers = () => {
     return (dispatch) => {
-        return axios.get('/getparks')
+        return axios.get('/api/getparks')
             .then((markerData) => {
+                //console.log(markerData)
                 dispatch(setMarker(markerData.data));
             })
     }
@@ -33,12 +34,14 @@ export const parkInfo = (parkData) => ({
 // Fetch request for specific park information
 export const fetchParkInfo = parkCode => {
     return (dispatch) => {
-        return axios.get('/getparks/park', parkCode)
+        //console.log(parkCode.params.code)
+        return axios.get(`/api/getparks/${parkCode.params.code}`)
             .then((parkData) => {
-                // console.log('actions/actions.js/39 - parkData:', parkData.data) // Checking the data type
-                dispatch(parkInfo(parkData.data))
+                 //console.log('actions/actions.js/39 - parkData:', parkData.data) // Checking the data type
+                 //console.log(parkData.data[0])
+                dispatch(parkInfo(parkData.data[0]))
             })
-    }
+     }
 }
 // ---------------------------------------------------------------
 

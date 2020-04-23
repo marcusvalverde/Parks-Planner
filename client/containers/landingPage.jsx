@@ -31,19 +31,21 @@ class landingPage extends React.Component {
         //         <MapContainer/>
         // </div>
       <section className="landing">
-        < div className="dark-overlay">
-          <div className="landing-inner">
-            <h1 className="x-large">Get Out There.</h1>
-            <p className="lead">
-            Use the map below to begin your next adventure
-          <MapContainer/>
-          </p>
-          
-          </div>
-          <div>
-          < Park/>
-          </div>
-        </div>
+          < div className="dark-overlay">
+              <div className="landing-inner">
+                  <div className ="firstWrap">
+                  <h1 className="x-large">Get Out There.</h1>
+                    <p className="lead">
+                    Use the map below to begin your next adventure
+                  <MapContainer/>
+                  </p>
+                  </div>
+                    <div clasName='parkWrap'>
+                    < Park/>
+                    </div>
+              </div>
+            
+            </div>
       </section>
     )
   

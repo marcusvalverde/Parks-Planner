@@ -49,6 +49,8 @@ class MapContainer extends Component {
         code={this.props.parksList[i].code}
         // Name of the park
         name={this.props.parksList[i].name}
+        
+        id={i}
         // OnClick functionality for each Marker to get specific park datao
         // onClick triggers an action that renders park information in park component
         onClick={() => this.props.fetchParkInfo({ params: { code: this.props.parksList[i].code } })
