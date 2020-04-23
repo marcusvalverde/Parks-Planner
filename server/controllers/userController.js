@@ -20,11 +20,14 @@ userController.signUp = async (req, res, next) => {
 
   // Cleansing client input to guard against SQL Injection
   const user = [username, password];
-  const query = `INSERT INTO users (username, password) VALUES($1, $2);`;
+  const query = `INSERT INTO users (username, password) VALUES($1, $2) RETURNING _id, username;`;
 
   // Executing query and adding user to the DB
   db.query(query, user)
-    .then(() => next())
+    .then((result) => {
+        res.locals.user = {_id: result.rows[0]._id, username: result.rows[0].username}
+        next()
+    })
     .catch((err) =>
       next({
         log: 'ERROR in userController.signup',
@@ -64,17 +67,37 @@ userController.login = (req, res, next) => {
 userController.updateFavorites = (req, res, next) => {
   const { _id, username, parkCode } = req.body;
 
-  const user = [_id, parkCode];
-  const query = `INSERT INTO favorites (user_id, park_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`;
-
-  db.query(query, user)
-    .then(() => {
-      res.locals.user = {_id: _id, username: username}
-      next()
+  const params = [_id, parkCode];
+  const findFav = `SELECT * FROM favorites WHERE user_id = $1 AND park_id = $2;`;
+  const insertFav = `INSERT INTO favorites (user_id, park_id) VALUES ($1, $2);`;
+  const deleteFav = `DELETE FROM favorites WHERE user_id = $1 AND park_id = $2;`;
+  
+  res.locals.user = {_id: _id, username: username}
+  
+  // query database to see if user has already favorited this park
+  db.query(findFav, params)
+  .then((result) => {
+    // if user has favorited park, delete from their favorites
+      if (result.rows.length === 1) {
+        db.query(deleteFav, params)
+        .then(() => next())
+        .catch((err) => next({
+          log: 'ERROR deleting user in userController.updateFavorites',
+          msg: err.detail,
+        }))
+    // if user has not favorited park, insert into their favorites
+      } else if (result.rows.length === 0) {
+        db.query(insertFav, params)
+        .then(() => next())
+        .catch((err) => next({
+          log: 'ERROR inserting user in userController.updateFavorites',
+          msg: err.detail,
+        }))
+      }
     })
     .catch((err) =>
       next({
-        log: 'ERROR in userController.updateFavorites',
+        log: 'ERROR in finding user in userController.updateFavorites',
         msg: err.detail,
       })
     );
