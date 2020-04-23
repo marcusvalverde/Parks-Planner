@@ -20,16 +20,13 @@ userController.signUp = async (req, res, next) => {
 
   // Cleansing client input to guard against SQL Injection
   const user = [username, password];
-  const query = `INSERT INTO users (username, password) VALUES($1, $2);`;
+  const query = `INSERT INTO users (username, password) VALUES($1, $2) RETURNING _id, username;`;
 
   // Executing query and adding user to the DB
   db.query(query, user)
-    .then(() => {
-      db.query(`SELECT * FROM users WHERE username = $1;`, [username])
-      .then((result) => {
+    .then((result) => {
         res.locals.user = {_id: result.rows[0]._id, username: result.rows[0].username}
         next()
-      })
     })
     .catch((err) =>
       next({
