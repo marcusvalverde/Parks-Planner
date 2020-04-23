@@ -24,7 +24,13 @@ userController.signUp = async (req, res, next) => {
 
   // Executing query and adding user to the DB
   db.query(query, user)
-    .then(() => next())
+    .then(() => {
+      db.query(`SELECT * FROM users WHERE username = $1;`, [username])
+      .then((result) => {
+        res.locals.user = {_id: result.rows[0]._id, username: result.rows[0].username}
+        next()
+      })
+    })
     .catch((err) =>
       next({
         log: 'ERROR in userController.signup',
