@@ -1,15 +1,16 @@
-
 // * the below function was used to create an array of objects due to National Park Service's slow API response...
 // array of objects syntax: [ { name: 'National Park Name, parkCode: 'parkCode', latitude: 12345, longitude: 12345 }]
 // * this was then stored into our SQL database which we send the initial request to instead :-)
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const db = require('../models/database.js');
+
 const npsAPIKey = process.env.NPS_API_KEY;
 
 const parkCodes =
   'anac,appa,arch,badl,bibe,blca,brca,cany,cave,coga,crla,cuva,drto,ever,foth,fofr,gaar,jeff,glba,glac,glec,grba,grsa,gumo,hosp,indu,jeca,jomu,kefj,lavo,lode,maac,maca,mnrr,mora,npnh,jazz,ozar,pefo,redw,romo,seki,thro,viis,whis,whsa,wotr,wrst,yell,yose';
-npsController.getParksAPI = (req, res, next) => {
+const getParksAPI = () => {
   const url = 'https://developer.nps.gov/api/v1/parks';
 
   axios
@@ -31,26 +32,22 @@ npsController.getParksAPI = (req, res, next) => {
         parkObj.weatherInfo = el.weatherInfo;
         parkObj.images = el.images;
         parkObj.activities = el.activities;
+        parkObj.description = el.description;
 
         parks.push(parkObj);
       }
 
       fs.writeFileSync(path.resolve(__dirname, '../json/parks.json'), JSON.stringify(parks));
-      console.log(parks);
-      res.locals.parks = parks;
-      next();
+      console.log('wrote file to JSON')
     })
     .catch((err) => {
-      return next({
-        log: err,
-        message: 'Something went wrong with the get request to NPS.gov/api',
-      });
+      console.log(err)
     });
 };
 
 // * used to load SQL database with NPS response...
 
-npsController.loadSQL = (req, res, next) => {
+const updateDatabase = () => {
   const query = `INSERT INTO parks ("parkCode", "fullName", "latitude", "longitude", "weatherInfo", "images", "activities") VALUES($1, $2, $3, $4, $5, $6, $7)`;
   const parksArray = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../json/parks.json')));
 
@@ -72,3 +69,6 @@ npsController.loadSQL = (req, res, next) => {
       .catch((err) => console.log(err));
   }
 };
+
+getParksAPI()
+// updateDatabase()
