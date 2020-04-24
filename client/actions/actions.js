@@ -71,3 +71,17 @@ export const logIn = logInInfo => {
             })
     }
 }
+
+export const addFavorite = favInfo => {
+    return (dispatch) => {
+        return axios.post('/user/favorite', favInfo)
+            .then(res => {
+                // send the reponse from server to the next dispatch to handle success 
+                dispatch(types.FAVORITE_SUCESS(res.data[0]))
+            })
+    }
+}
+export const FAVORITE_SUCESS = favoriteData => ({
+    type: types.FAVORITE_SUCESS,
+    payload: favoriteData,
+});

@@ -4,7 +4,7 @@ require('dotenv').config();
 const PG_URI = process.env.DATABASE_URI;
 
 const pool = new Pool({
-  max: -1,
+  //max: -1,
   connectionString: PG_URI,
 });
 

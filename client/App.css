@@ -375,7 +375,7 @@ button {
 .park{
   display:flex;
   flex-wrap: wrap;
-  background-color: lightblue;
+  
   margin-left: 2rem; 
   /* display: grid;
   align-items: center;

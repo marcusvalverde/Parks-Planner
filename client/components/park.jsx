@@ -19,7 +19,7 @@ const mapStateToProps = state => ({
   
 // })
 function handleClick(){
-  console.log(props.isFav)
+  console.log(this.props.code, this.props.isfav)
   
 }
 // pull out the pieces of state that we want to render for specific park data

@@ -94,6 +94,13 @@ const parkReducer = (state = initialState, action) => {
         username,
       }
 
+      case types.FAVORITE_SUCESS:
+        // console.log('Triggered LOGGED_IN_USER in reducer.')
+        return {
+          ...state,
+          loggedInUser: action.payload,
+        };
+
     default:
       return state
   }
